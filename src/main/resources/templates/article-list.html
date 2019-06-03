@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>掲示板アプリケーション</h1>
+	<form method="post" th:action="@{/article-list/post}">
+		投稿者名 : <span><input type="text" name="name"></span><br>
+		記事内容 : <span><textarea name="content"></textarea></span><br>
+		<button>記事投稿</button>
+	</form>
+	<p>
+	<div th:if="${session.articles}" th:each="article: ${session.articles}">
+		<div th:text="'投稿者ID: ' + ${article.id}"></div>
+		<div th:text="'投稿者名: ' + ${article.name}"></div>
+		<div th:text="'投稿内容: ' + ${article.content}"></div>
+		<form method="post" th:action="@{/article-list/delete}">
+			<button name="id" th:value="${article.id}">記事削除</button>
+		</form>
+		<hr>
+	</div>
+</body>
+</html>

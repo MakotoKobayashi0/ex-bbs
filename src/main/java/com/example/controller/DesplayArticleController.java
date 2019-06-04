@@ -3,6 +3,7 @@ package com.example.controller;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,6 +24,7 @@ import com.example.repository.CommentRepository;
  */
 @Controller
 @RequestMapping("/article-list")
+@Transactional // リポジトリを呼ぶクラスの上につける 4冊目167ページ
 public class DesplayArticleController {
 
 	@Autowired
@@ -90,6 +92,7 @@ public class DesplayArticleController {
 	@RequestMapping("/delete")
 	public String delete(Integer id) {
 		commentRepository.deleteByArticleId(id);
+		
 		articleRepository.delete(id);
 		return "redirect:/article-list";
 	}
@@ -117,7 +120,7 @@ public class DesplayArticleController {
 	public String postCommnet(CommentPostForm form) {
 		Comment comment = new Comment();
 		BeanUtils.copyProperties(form, comment);
-		commentRepository.insert(comment.getName(), comment.getContent(), comment.getArticleId());
+		commentRepository.insert(comment);
 		return "redirect:/article-list"; 
 	}
 }

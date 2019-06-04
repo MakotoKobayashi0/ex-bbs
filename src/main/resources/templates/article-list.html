@@ -7,17 +7,37 @@
 <body>
 	<h1>掲示板アプリケーション</h1>
 	<form method="post" th:action="@{/article-list/post}">
+<!-- 		<div th:if="${#fields.hasErrors('name')}">
+			<p th:error="*{name}">名前が間違えています</p>
+		</div> -->
 		投稿者名 : <span><input type="text" name="name"></span><br>
 		記事内容 : <span><textarea name="content"></textarea></span><br>
 		<button>記事投稿</button>
 	</form>
 	<p>
-	<div th:if="${session.articles}" th:each="article: ${session.articles}">
+	<div th:if="${articles}" th:each="article: ${articles}">
 		<div th:text="'投稿者ID: ' + ${article.id}"></div>
 		<div th:text="'投稿者名: ' + ${article.name}"></div>
 		<div th:text="'投稿内容: ' + ${article.content}"></div>
 		<form method="post" th:action="@{/article-list/delete}">
 			<button name="id" th:value="${article.id}">記事削除</button>
+		</form>
+		<br>
+		<div th:each="comment: ${article.comments}">
+			<div th:text="${comment.id}"></div>
+			<div th:text="${comment.name}"></div>
+			<div th:text="${comment.content}"></div>
+			<form method="post" th:action="@{/article-list/delete-comment}">
+				<button name="id" th:value="${comment.id}">コメント削除</button>
+			</form>
+			<br>
+		</div>
+		
+		<form method="post" th:action="@{/article-list/post-comment}">
+			名前 : <span><input type="text" name="name"></span><br>
+			コメント : <span><textarea name="content"></textarea></span><br>
+			<input type="hidden" name="articleId" th:value="${article.id}">
+			<button>コメント投稿</button>
 		</form>
 		<hr>
 	</div>
